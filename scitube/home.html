@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <title>SciTube!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="phyworld.css" rel="stylesheet">
+    <link href="typeahead.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="page-header pb-1 bg">
+      <div class="container">
+        <table>
+          <tr>
+            <td>
+              <a href="home.html"><img src="atom.png" alt="SciTube!" height="150" width="150"></a>
+            </td>
+            <td>
+              <a class="navbar-brand" href="home.html"><h1 class="display-3">SciTube!</h1></a>
+              <p>CLEAR, CONCISE PHYSICS IN QUANTUM STEPS</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="container pt-5">
+      <div class="row pt-5">
+        <div class="input-group pt-5">
+            <input type="text" class="form-control typeahead tt-query" id="valSearch" placeholder="Search video" value="What is Quantum Mechanics?" required>
+            <span class="input-group-append">
+              <button class="btn btn-danger" type="button" id="searchbtn" onclick="getVideo()" data-toggle="modal" data-target="#searchModal">Search</button>
+            </span>
+        </div>
+      </div>
+
+      <div class="row top5">
+        <div class="col-md-12 text-center">
+          <p>or, Search by <a href="topics.html">Topics</a>, or, <a href="tags.html">Tags</a></p>
+        </div>
+      </div>
+
+      <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Search Error!</h5>
+            </div>
+            <div class="modal-body">
+              No videos found with the search term. Choose an appropriate option from the suggestions given.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer text-muted">
+      <div class="container">
+        <ul class="bd-footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="topics.html">Topics</a></li>
+          <li><a href="tags.html">Tags</a></li>
+          <li><a href="mailto:rl2857@columbia.edu">Contact</a></li>
+        </ul>
+        <p>Designed and built with all the love in the world by <a href="https://ravielakshmanan.github.io/" target="_blank">Ravie Lakshmanan</a>.</p>
+        <p>Currently v3.0.0-alpha.0.</p>
+      </div>
+    </footer>
+
+    <script src="http://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script  type="text/javascript" src="typeahead.bundle.js"></script>
+
+    <script type="text/javascript">
+
+      $(document).ready(function(){
+
+        $('#searchModal').modal('hide');
+
+        var questions = ['What is Quantum Mechanics?', 
+                         'Heisenberg\'s Uncertainty Principle Explained', 
+                         'Schrodinger\'s Cat Explained', 
+                         'String Theory Made Simple', 
+                         'Standard Model of Particle Physics', 
+                         'Einstein\'s Theory of Relativity', 
+                         'Quantum Entanglement', 
+                         'Quantum Computers', 
+                         'The Big Bang', 
+                         'Planck\'s Constant',
+                         'Special Relativity',
+                         'Quantum Mechanics (Part 1)',
+                         'Quantum Mechanics (Part 2)',
+                         'Light is Waves',
+                         'General Relativity'];
+    
+        var questions = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: questions
+        });
+        
+        $('.typeahead').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            name: 'questions',
+            source: questions,
+            limit: 10
+        });
+      });
+
+      var video_id = "";
+      var videos_data = "";
+
+      $.getJSON( "videos.json", function( data ) {
+        console.log(data);
+        videos_data = data;
+      });
+
+      // function to start each line of the textarea/notepad with a '• ' upon keyup event
+      $("#valSearch").keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+          if(keycode == '13'){
+              document.getElementById('searchbtn').click();
+        }
+      });
+
+      function getVideo() {
+        var query = document.getElementById("valSearch").value;
+        if(query != '') {
+          video_id = videos_data[query];
+          if(video_id != null) {
+            var query_string = "?id=" + video_id + "&query=" + query;
+            window.location.href = "video.html" + query_string; 
+          } else {
+            $('#searchModal').modal("show");
+          }  
+        } else {
+          document.getElementById("valSearch").focus();
+          document.getElementById("valSearch").style.border = "solid #d9534f";
+        }
+      }
+    </script>
+
+  </body>
+</html>

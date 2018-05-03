@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <title>SciTube!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="phyworld.css" rel="stylesheet">
+    <link href="album.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="page-header pb-1 bg">
+      <div class="container">
+        <table>
+          <tr>
+            <td>
+              <a href="home.html"><img src="atom.png" alt="SciTube!" height="150" width="150"></a>
+            </td>
+            <td>
+              <a class="navbar-brand" href="home.html"><h1 class="display-3">SciTube!</h1></a>
+              <p>CLEAR, CONCISE PHYSICS IN QUANTUM STEPS</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="container pb-5 pt-5">
+      <div class="row pt-5">
+        <div class="col-md-12 text-center pb-3" id="alertText">
+          You don't have any tagged videos! Start watching a video to tag it. :)
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center" id="tagDiv">
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer text-muted">
+      <div class="container">
+        <ul class="bd-footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="topics.html">Topics</a></li>
+          <li><a href="tags.html">Tags</a></li>
+          <li><a href="mailto:rl2857@columbia.edu">Contact</a></li>
+        </ul>
+        <p>Designed and built with all the love in the world by <a href="https://ravielakshmanan.github.io/" target="_blank">Ravie Lakshmanan</a>.</p>
+        <p>Currently v3.0.0-alpha.0.</p>
+      </div>
+    </footer>
+
+    <script src="http://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+      
+      var tags = JSON.parse(sessionStorage.tags);
+
+      window.onload = function() {
+        getTags();
+      };
+
+      // function to display the tagged videos
+      function getTags() {
+        if(tags.length != 0) {
+          document.getElementById("alertText").innerHTML = "Videos you have tagged:";
+        }
+        for(var j = 0; j < tags.length; j++) {
+          var tag_dict = tags[j];
+          var id = tag_dict.video;
+          var tag = tag_dict.tag;
+         
+          placeHolder = document.getElementById("tagDiv");
+
+          var btn = document.createElement("button");
+          var btn_id = "tagbtn" + j.toString();
+          btn.id = btn_id;
+          var t = document.createTextNode(tag);
+          btn.className = "btn btn-primary mr-3 mt-3";
+          btn.appendChild(t);
+          placeHolder.appendChild(btn);
+          // btn.onclick = function() {
+          //   getVideo();
+          // };
+        }
+      }
+
+      // function to navigate to video page on clicking the tag button
+      $(document).ready(function(){
+        $(document).on("click","button",function(){
+          var btn_id = this.id;
+          var index = btn_id.substring(6);
+          tag = tags[index];
+          getVideo(tag.video, tag.title);
+        });
+      });
+
+      // function to open the appropriate video
+      function getVideo(video_id, video_title) {
+        var query_string = "?id=" + video_id + "&query=" + video_title;
+        window.location.href = "video.html" + query_string;
+      }
+    </script>
+
+  </body>
+</html>

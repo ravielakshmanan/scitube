@@ -1,0 +1,136 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 200px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 200px;
+  padding:4rem 0;
+  margin-top:4rem;
+  font-size:85%;
+  background-color:#f7f7f7
+}
+
+@include media-breakpoint-up(sm) {
+  html {
+    font-size: 1.0rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  html {
+    font-size: 1.2rem;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  html {
+    font-size: 1.4rem;
+  }
+}
+
+.jumbotron {
+  background-color: #f7f7f7;
+  height: 10px;
+}
+
+.bg {
+  background-color: #f7f7f7
+}
+
+@media (min-width:576px) {
+  .footer {
+    text-align:left
+  }
+}
+
+.bd-footer-links {
+  padding-left:0;
+  margin-bottom:1rem
+}
+
+.bd-footer-links li {
+  display:inline-block
+}
+
+.bd-footer-links li+li {
+  margin-left:1rem
+}
+
+#bulleted, #outline {
+  /*background-image:url(notepad.jpg);*/
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.inner-div {
+  margin: auto;
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.input-group {
+  margin:0 auto;
+  max-width: 30rem;
+}
+
+.top5 { 
+  margin-top:7%; 
+}
+
+#valSearch, #startTime, #endTime, #tagText {
+  border: 1px solid #f7f7f7;
+}
+
+#valSearch:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#startTime:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#endTime:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#tagText:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.c {
+  border-width: 2px;
+  border-style: dashed;
+}
+
+#tagDiv {
+  line-height: 1.5;
+}
+
+$popper-bg: rgba(255, 193, 7, 1);
+
+.popper {
+  // position: absolute;
+  background: $popper-bg;
+  //width: 150px;
+  padding: 10px;
+  text-align: center;
+  .popper__arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+  }
+}

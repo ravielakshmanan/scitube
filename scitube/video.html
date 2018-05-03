@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <title>SciTube!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="phyworld.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="page-header pb-1 bg">
+      <div class="container">
+        <table>
+          <tr>
+            <td>
+              <a href="home.html"><img src="atom.png" alt="SciTube!" height="150" width="150"></a>
+            </td>
+            <td>
+              <a class="navbar-brand" href="home.html"><h1 class="display-3">SciTube!</h1></a>
+              <p>CLEAR, CONCISE PHYSICS IN QUANTUM STEPS</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="container pb-5 pt-3">
+      <div class="row">
+        <div class="col-md-8">
+          <h3 id="videoTitle" class="pb-1"></h3>
+          <div class="embed-responsive embed-responsive-4by3 pb-3 pt-1" id="yt_player"></div>
+          <form>
+            <div class="form-row pb-3">
+              <div class="col-xs-2 mt-2">
+                Play Segment:
+              </div>
+              <div class="col-xs-2">
+                <input type="text" class="form-control" placeholder="Start Time in MM:SS" id="startTime" required>
+              </div>
+              <div class="col-xs-2">
+                <input type="text" class="form-control" placeholder="End Time in MM:SS" id="endTime" required>
+              </div>
+              <div class="col-xs-2">
+                <button type="button" class="btn btn-primary" onclick="loopVideoSegment()">Play</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-xs-2 mt-2">
+                More options:
+              </div>
+              <div class="col-xs-2">
+                <button type="button" class="btn btn-primary" onclick="addCurrentTime()" data-trigger="hover" data-content="Click here to add specific start times to the dropdown for revisiting later." data-toggle="popover">Mark Start Time</button>
+              </div>
+              <div class="col-xs-2">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Times</button>
+                <div class="dropdown-menu" id="timeDropdown">
+                  <a class="dropdown-item disabled" id="notimes" href="#">No Times found!</a>
+                </div>
+              </div>
+              <div class="col-xs-4">
+                <button type="button" class="btn btn-primary" data-trigger="hover" data-content="Click here to tag your videos for later viewing." data-toggle="popover" id="tagbtn">Tag Video</button>
+              </div>
+
+              <div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="tagLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="tagLabel">Add Video Tag</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-row">
+                        <div class="col">
+                          Enter a tag for the video: 
+                        </div>
+                        <div class="col">
+                          <input type="text" class="form-control" placeholder="#physics101" value="#" id="tagText" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-primary" onclick="addTagToVideo()">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="col-md-4">
+          <nav class="pb-1">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-bullet-tab" data-toggle="tab" href="#nav-bullet" role="tab" aria-controls="nav-bullet" aria-selected="true">
+                Bulleted List
+              </a>
+              <a class="nav-item nav-link" id="nav-outline-tab" data-toggle="tab" href="#nav-outline" role="tab" aria-controls="nav-outline" aria-selected="false">
+                Outline
+              </a>
+            </div>
+          </nav>
+
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-bullet" role="tabpanel" aria-labelledby="nav-bullet-tab">
+              <div class="pb-3">
+                <form>
+                  <textarea id="bulleted" class="bulleted form-control" name="bulleted" rows="15" placeholder="Start a bulleted list..." oninput="pauseYouTubeVideo()"></textarea>
+                </form>
+              </div>
+              <div class="form-row">
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-primary" onclick="saveTextAsFile()">Save Note</button>
+                </div>
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#doneModal">Done</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab-pane fade" id="nav-outline" role="tabpanel" aria-labelledby="nav-outline-tab">
+              <div class="pb-3">
+                <form>
+                  <textarea id="outline" class="outline form-control" name="outline" rows="15" placeholder="Start an outline..." oninput="pauseYouTubeVideo()"></textarea>
+                </form>
+              </div>
+              <div class="form-row">
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-primary" onclick="saveOutlineAsFile()">Save Note</button>
+                </div>
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#doneModal">Done</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="doneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Success!</h5>
+            </div>
+            <div class="modal-body">
+              You have successfully finished your outline. Directing you back to the home page... Hit OK to proceed.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" onclick="alertSuccess()">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer text-muted">
+      <div class="container">
+        <ul class="bd-footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="topics.html">Topics</a></li>
+          <li><a href="tags.html">Tags</a></li>
+          <li><a href="mailto:rl2857@columbia.edu">Contact</a></li>
+        </ul>
+        <p>Designed and built with all the love in the world by <a href="https://ravielakshmanan.github.io/" target="_blank">Ravie Lakshmanan</a>.</p>
+        <p>Currently v3.0.0-alpha.0.</p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    
+    <script>
+      // get the YouTube video id
+      var queryString = decodeURIComponent(window.location.search);
+      queryString_values = queryString.split("&");
+      video_id = queryString_values[0].substring(4);
+      video_title = queryString_values[1].substring(6);
+      
+      var player;
+      var youtubeURL;
+      var video_tags = [];
+
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // function to setup the YouTube player
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('yt_player', {
+          height: '390',
+          width: '640',
+          videoId: video_id,
+          playerVars :{
+            'showinfo':0,
+            'fs':0,
+            'modestbranding':1
+          },
+          events:{
+            'onReady': loadVideo
+            //'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      // function to play the video
+      function loadVideo(event) {
+        event.target.playVideo();
+        // player.mute();
+        youtubeURL = player.getVideoUrl();
+      }
+
+      var done = false;
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          setTimeout(pauseVid, 6000);
+          done = true;
+        }
+      }
+
+      // function to pause a YouTube video
+      function pauseVid() {
+        player.pauseVideo();
+      }
+
+      // function to pause a video when the user begins taking a note.
+      function pauseYouTubeVideo() {
+        if (player.getPlayerState() == 1) {
+          pauseVid();
+        }
+      }
+
+      // function to convert the time in MM:SS to seconds
+      function timeToSS(t) {
+        var timeArray = t.split(':');
+        var timeSecs = (parseInt(timeArray[0])) * 60 + (parseInt(timeArray[1])); 
+
+        return timeSecs;
+      }
+
+      // function to loop a specific video segment given the start and end time
+      function loopVideoSegment() {
+        var startTime = document.getElementById("startTime").value;
+        var endTime = document.getElementById("endTime").value;
+        var duration = player.getDuration();
+
+        if (startTime != null && endTime != null) {
+          sTime = timeToSS(startTime);
+          eTime = timeToSS(endTime);
+
+          if(sTime < eTime && sTime < duration && eTime < duration) {
+            player.loadVideoById({
+              videoId: video_id,
+              startSeconds: sTime,
+              endSeconds: eTime
+            });
+          } else {
+            document.getElementById('startTime').value = ''
+            document.getElementById('endTime').value = ''
+            document.getElementById("startTime").focus();
+            document.getElementById("startTime").style.border = "solid #d9534f";
+          }
+        }
+        // stopTime = endTime - startTime;
+        // player.stopVideo();
+        // player.seekTo(startTime);
+        // player.playVideo();
+        // setTimeout(pauseVid, stopTime * 1000);
+      }
+
+      // function to add the current time to dropdown
+      function addCurrentTime() {
+        var time = player.getCurrentTime();
+        timeMMSS = timeToMMSS(time);
+        $('#notimes').hide();
+
+        var dropdown = document.getElementById("timeDropdown");
+
+        var dditem = document.createElement("a");
+
+        dditem.className = "dropdown-item";
+        dditem.innerHTML = timeMMSS;
+        dditem.href = "#";
+        // dditem.onclick = function() { navigateToSpecificTime() };
+        dropdown.appendChild(dditem);
+      }
+
+      // function to call navigateToSpecificTime() when a specific option is selected from the dropdown
+      $("#timeDropdown").on("click","a",function(){
+        var selText = $(this).text();
+        navigateToSpecificTime(selText);
+      });
+
+      function navigateToSpecificTime(t) {
+        var timeToSeek = timeToSS(t)
+        player.seekTo(timeToSeek);
+      }
+
+      $(document).ready(function(){
+
+        document.getElementById("videoTitle").innerHTML = video_title;
+
+        $('[data-toggle="popover"]').popover({
+            placement : 'bottom',
+            trigger : 'hover'
+        });
+
+        $('#tagbtn').click(function () {
+          $('#tagModal').modal('show');
+          $('[data-toggle=popover]').popover('hide');  
+        });
+
+      });
+
+      // function to check if a pre-existing tag is used to tag a video
+      function checkIfTagPresent(video_id, tag_text, video_tags) {
+        var length = video_tags.length;
+        for (var i=0; i < length; i++) {
+          var tag_dict = video_tags[i];
+          var id = tag_dict.video;
+          var tag = tag_dict.tag;
+
+          if (id == video_id) {
+            if (tag == tag_text) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      // function to tag a video
+      function addTagToVideo() {
+        var tag_text = document.getElementById('tagText').value;
+
+        if (tag_text != ''){
+          if (sessionStorage.tags){
+            video_tags = JSON.parse(sessionStorage.tags);
+          }
+          
+          var status = checkIfTagPresent(video_id, tag_text, video_tags);
+
+          if(!status) {
+            var tag_dict = {video:video_id, tag:tag_text, title:video_title};
+            video_tags.push(tag_dict);
+            sessionStorage.setItem('tags', JSON.stringify(video_tags));
+            $('#tagModal').modal("hide");
+          } else {
+            document.getElementById("tagText").focus();
+            document.getElementById("tagText").select();
+            document.getElementById("tagText").style.border = "solid #d9534f";
+          }
+        } else {
+          document.getElementById("tagText").focus();
+          document.getElementById("tagText").style.border = "solid #d9534f";
+        }
+      }
+
+      // function to convert time in seconds to MM:SS
+      function timeToMMSS(t) {
+        var sec_num = parseInt(t, 10); // don't forget the second param
+        var hours   = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+
+        return minutes+':'+seconds;
+      }
+
+      // function to start each line of the textarea/notepad with a '• '
+      $(".bulleted").focus(function() {
+          if(document.getElementById('bulleted').value === ''){
+              document.getElementById('bulleted').value +='• ';
+        }
+      });
+      
+      // function to start each line of the textarea/notepad with a '• ' upon keyup event
+      $(".bulleted").keyup(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+          if(keycode == '13'){
+              document.getElementById('bulleted').value +='• ';
+        }
+        var txtval = document.getElementById('bulleted').value;
+        if(txtval.substr(txtval.length - 1) == '\n'){
+          document.getElementById('bulleted').value = txtval.substring(0,txtval.length - 1);
+        }
+      });
+
+      // function to download a file by creating a hyperlink element
+      function downloadfile(filename, element) {
+        var downloadLink = document.createElement("a");
+        downloadLink.download = filename;
+        downloadLink.innerHTML = "Download File";
+        downloadLink.href = element;
+        downloadLink.onclick = destroyClickedElement;
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+     
+        downloadLink.click();
+      }
+
+      // function to save the bulleted list as text file (.txt)
+      function saveTextAsFile() {
+        var textToSave = document.getElementById("bulleted").value;
+        var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+        var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+        var fileNameToSaveAs = "note.txt";
+
+        downloadfile(fileNameToSaveAs, textToSaveAsURL);
+      }
+
+      // function to save the outline as text file (.txt)
+      function saveOutlineAsFile() {
+        var textToSave = document.getElementById("outline").value;
+        var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+        var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+        var fileNameToSaveAs = "note.txt";
+
+        downloadfile(fileNameToSaveAs, textToSaveAsURL);
+      }
+
+      // function to save notes as markdown file (.md)
+      // construct URL's of the form: https://www.youtube.com/watch?v=i1TVZIBj7UA&t=00m28s
+      function saveToMarkdownFile() {
+        var textArea = document.getElementById("bulleted");
+        var linesArray = textArea.value.split("\n");
+        
+        var markdownArray = [];
+        for (var j = 0; j < linesArray.length; j++) {
+          var timeMin = linesArray[j].substring(2,4);
+          var timeSec = linesArray[j].substring(5,7);
+          var time = linesArray[j].substring(2,7);
+          var note = linesArray[j].substring(7);
+          var ytURL = youtubeURL.concat("&t=" + timeMin + "m" + timeSec + "s)");
+          var markdownString = '* ['.concat(time.concat('](').concat(ytURL.concat(note)));
+          markdownArray.push(markdownString);
+        }
+
+        var markdownText = markdownArray.join('\r\n');
+        
+        var textToSaveAsBlob = new Blob([markdownText], {type:"text/plain"});
+        var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+        var fileNameToSaveAs = "markdown.md";
+
+        downloadfile(fileNameToSaveAs, textToSaveAsURL);
+      }
+
+      // function to delete the newly created download link post download
+      function destroyClickedElement(event) {
+          document.body.removeChild(event.target);
+      }
+
+      // function to alert success message and redirect user back to the home page
+      function alertSuccess() {
+        window.location.href = "home.html";
+      }
+
+    </script>
+
+  </body>
+</html>

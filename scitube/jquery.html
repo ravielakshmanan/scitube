@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>focus demo</title>
+  <script src="http://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+ 
+<form>
+    <textarea id="todolist" class="todolist" name="todolist" rows="10" placeholder="Start a note..."></textarea>
+</form>
+ 
+<script>
+$(".todolist").focus(function() {
+    if(document.getElementById('todolist').value === ''){
+        document.getElementById('todolist').value +='• ';
+	}
+});
+$(".todolist").keyup(function(event){
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+        document.getElementById('todolist').value +='• ';
+	}
+	var txtval = document.getElementById('todolist').value;
+	if(txtval.substr(txtval.length - 1) == '\n'){
+		document.getElementById('todolist').value = txtval.substring(0,txtval.length - 1);
+	}
+});
+</script>
+ 
+</body>
+</html>
